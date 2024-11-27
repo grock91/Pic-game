@@ -1,1 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emoji Quiz Game</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          background-color: #f0f0f0;
+          margin: 0;
+          padding: 20px;
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+      }
+      .container {
+          background-color: white;
+          border-radius: 10px;
+          padding: 20px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          max-width: 600px;
+          width: 100%;
+      }
+      .quiz-area {
+          text-align: center;
+          margin: 20px 0;
+      }
+      .emoji-display {
+          font-size: 4em;
+          margin: 20px 0;
+          min-height: 100px;
+      }
+      .answer {
+          font-size: 1.5em;
+          margin: 20px 0;
+          color: #2c3e50;
+          min-height: 40px;
+      }
+      .controls {
+          display: flex;
+          justify-content: center;
+          gap: 10px;
+          margin-top: 20px;
+      }
+      button {
+          padding: 10px 20px;
+          font-size: 1em;
+          cursor: pointer;
+          border: none;
+          border-radius: 5px;
+          background-color: #3498db;
+          color: white;
+          transition: background-color 0.3s;
+      }
+      button:hover {
+          background-color: #2980b9;
+      }
+      .progress {
+          margin-top: 20px;
+          color: #7f8c8d;
+      }
+      .category {
+          font-size: 1.5em;
+          color: #2c3e50;
+          margin-bottom: 20px;
+      }
+  </style>
+</head>
+<body>
+  <div class="container">
+      <div class="quiz-area">
+          <div class="category" id="category">Movies 🎬</div>
+          <div class="emoji-display" id="emoji"></div>
+          <div class="answer" id="answer"></div>
+          <div class="controls">
+              <button onclick="prevSlide()">Previous</button>
+              <button onclick="toggleAnswer()">Show Answer</button>
+              <button onclick="nextSlide()">Next</button>
+          </div>
+          <div class="progress" id="progress"></div>
+      </div>
+  </div>
 
+  <script>
+      const quizData = [
+          {
+              category: "Movies 🎬",
+              items: [
+                  { emoji: "🦁👑", answer: "The Lion King" },
+                  { emoji: "👻👻👻🔫", answer: "Ghostbusters" },
+                  { emoji: "🚢❄️💔", answer: "Titanic" },
+                  { emoji: "🧙‍♂️💍🌋", answer: "Lord of the Rings" },
+                  { emoji: "🦖🏝️🚙", answer: "Jurassic Park" }
+              ]
+          },
+          {
+              category: "Sports ⚽",
+              items: [
+                  { emoji: "⚽️🏃‍♂️🥅", answer: "Soccer/Football" },
+                  { emoji: "🏈🏃‍♂️🏆", answer: "American Football" },
+                  { emoji: "🏀🏃‍♂️⛹️‍♂️", answer: "Basketball" },
+                  { emoji: "⚾️🏃‍♂️💨", answer: "Baseball" },
+                  { emoji: "🎾🏃‍♂️🎾", answer: "Tennis" }
+              ]
+          }
+      ];
+
+      let currentCategory = 0;
+      let currentSlide = 0;
+      let answerVisible = false;
+
+      function updateSlide() {
+          const category = quizData[currentCategory];
+          const item = category.items[currentSlide];
+
+          document.getElementById('category').textContent = category.category;
+          document.getElementById('emoji').textContent = item.emoji;
+          document.getElementById('answer').textContent = answerVisible ? item.answer : '';
+          document.getElementById('progress').textContent = 
+              `Question ${currentSlide + 1} of ${category.items.length}`;
+      }
+
+      function nextSlide() {
+          answerVisible = false;
+          if (currentSlide < quizData[currentCategory].items.length - 1) {
+              currentSlide++;
+          } else if (currentCategory < quizData.length - 1) {
+              currentCategory++;
+              currentSlide = 0;
+          } else {
+              currentCategory = 0;
+              currentSlide = 0;
+          }
+          updateSlide();
+      }
+
+      function prevSlide() {
+          answerVisible = false;
+          if (currentSlide > 0) {
+              currentSlide--;
+          } else if (currentCategory > 0) {
+              currentCategory--;
+              currentSlide = quizData[currentCategory].items.length - 1;
+          } else {
+              currentCategory = quizData.length - 1;
+              currentSlide = quizData[currentCategory].items.length - 1;
+          }
+          updateSlide();
+      }
+
+      function toggleAnswer() {
+          answerVisible = !answerVisible;
+          updateSlide();
+      }
+
+      // Initialize the first slide
+      updateSlide();
+  </script>
+</body>
+</html>
